@@ -1,45 +1,50 @@
-using User.Models;
-
-namespace User.Services;
-
-public static class UserService
+namespace User.Services
 {
-    static List<UserModel> Users { get; }
-    static int nextId = 3;
-    static UserService()
+    public class UserService
     {
-        Users = new List<UserModel>
+        private List<Models.User> Users { get; }
+        private int nextId = 3;
+
+        public UserService()
         {
-            new UserModel { Id = 1, Name = "Classic Italian", IsGlutenFree = false },
-            new UserModel { Id = 2, Name = "Veggie", IsGlutenFree = true }
-        };
-    }
+            Users =
+            [
+                new Models.User { Id = 1, Name = "Super Admin", IsActive = false },
+                new Models.User { Id = 2, Name = "Customer", IsActive = true }
+            ];
+        }
 
-    public static List<UserModel> GetAll() => Users;
+        public List<Models.User> GetAll()
+        {
+            return Users;
+        }
 
-    public static UserModel? Get(int id) => Users.FirstOrDefault(p => p.Id == id);
+        public void Add(Models.User user)
+        {
+            user.Id = nextId++;
+            Users.Add(user);
+        }
 
-    public static void Add(UserModel user)
-    {
-        user.Id = nextId++;
-        Users.Add(user);
-    }
+        public Models.User? Get(int id)
+        {
+            return Users.FirstOrDefault(p => p.Id == id);
+        }
 
-    public static void Delete(int id)
-    {
-        var user = Get(id);
-        if(user is null)
-            return;
+        public void Update(Models.User user)
+        {
+            var index = Users.FindIndex(p => p.Id == user.Id);
+            if (index == -1)
+                return;
 
-        Users.Remove(user);
-    }
+            Users[index] = user;
+        }
 
-    public static void Update(UserModel user)
-    {
-        var index = Users.FindIndex(p => p.Id == user.Id);
-        if(index == -1)
-            return;
+        public void Delete(int id)
+        {
+            var user = Get(id);
+            if (user is null) return;
+            Users.Remove(user);
+        }
 
-        Users[index] = user;
     }
 }

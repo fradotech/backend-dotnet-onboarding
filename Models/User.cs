@@ -1,8 +1,8 @@
 namespace User.Models;
 
-public class UserModel
+public class User
 {
     public int Id { get; set; }
     public string? Name { get; set; }
-    public bool IsGlutenFree { get; set; }
+    public bool IsActive { get; set; }
 }
