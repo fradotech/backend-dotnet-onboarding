@@ -1,7 +1,8 @@
-using User.Services;
+using Iam.Services;
 using Microsoft.AspNetCore.Mvc;
+using Iam.Models;
 
-namespace User.Controllers;
+namespace Iam.Controllers;
 
 [ApiController]
 [Route("users")]
@@ -10,20 +11,20 @@ public class UserController(UserService userService) : ControllerBase
     private readonly UserService _userService = userService;
 
     [HttpGet]
-    public ActionResult<List<Models.User>> GetAll()
+    public ActionResult<List<AppUser>> GetAll()
     {
         return _userService.GetAll();
     }
 
     [HttpPost]
-    public IActionResult Create(Models.User user)
+    public IActionResult Create(AppUser user)
     {
         _userService.Add(user);
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Models.User> Get(int id)
+    public ActionResult<AppUser> Get(int id)
     {
         var user = _userService.Get(id);
         if (user == null) return NotFound();
@@ -31,7 +32,7 @@ public class UserController(UserService userService) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Models.User user)
+    public IActionResult Update(int id, AppUser user)
     {
         if (id != user.Id) return BadRequest();
 

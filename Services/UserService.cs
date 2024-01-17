@@ -1,36 +1,38 @@
-namespace User.Services
+using Iam.Models;
+
+namespace Iam.Services
 {
     public class UserService
     {
-        private List<Models.User> Users { get; }
+        private List<AppUser> Users { get; }
         private int nextId = 3;
 
         public UserService()
         {
             Users =
             [
-                new Models.User { Id = 1, Name = "Super Admin", IsActive = false },
-                new Models.User { Id = 2, Name = "Customer", IsActive = true }
+                new AppUser { Id = 1, Name = "Super Admin", IsActive = false },
+                new AppUser { Id = 2, Name = "Customer", IsActive = true }
             ];
         }
 
-        public List<Models.User> GetAll()
+        public List<AppUser> GetAll()
         {
             return Users;
         }
 
-        public void Add(Models.User user)
+        public void Add(AppUser user)
         {
             user.Id = nextId++;
             Users.Add(user);
         }
 
-        public Models.User? Get(int id)
+        public AppUser? Get(int id)
         {
             return Users.FirstOrDefault(p => p.Id == id);
         }
 
-        public void Update(Models.User user)
+        public void Update(AppUser user)
         {
             var index = Users.FindIndex(p => p.Id == user.Id);
             if (index == -1)

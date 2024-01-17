@@ -1,4 +1,5 @@
-using User.Services;
+using Microsoft.EntityFrameworkCore;
+using Iam.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql("Host=127.0.0.1;Database=dotnet_onboarding;Username=postgres;Password=frado201"));
 
 var app = builder.Build();
 
@@ -21,4 +24,19 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.UseHttpsRedirection();
+
+// Check database connection
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (dbContext.Database.CanConnect())
+    {
+        Console.WriteLine("Connected to the database successfully!");
+    }
+    else
+    {
+        throw new Exception("Failed to connect to the database.");
+    }
+}
+
 app.Run();
