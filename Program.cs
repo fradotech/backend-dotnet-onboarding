@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-
+app.UseMiddleware<AuthorizationMiddleware>();
 app.UseHttpsRedirection();
 
 // Check database connection
