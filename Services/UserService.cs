@@ -1,52 +1,47 @@
 using Iam.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Iam.Services
 {
     public class UserService
     {
-        private List<AppUser> Users { get; }
-        private int nextId = 3;
+        private readonly AppDbContext _context;
 
-        public UserService()
+        public UserService(AppDbContext context)
         {
-            Users =
-            [
-                new AppUser { Id = 1, Name = "Super Admin", IsActive = false },
-                new AppUser { Id = 2, Name = "Customer", IsActive = true }
-            ];
+            _context = context;
         }
 
-        public List<AppUser> GetAll()
+        public async Task<List<AppUser>> GetAll()
         {
-            return Users;
+            return await _context.Users.ToListAsync();
         }
 
-        public void Add(AppUser user)
+        public async Task Create(AppUser user)
         {
-            user.Id = nextId++;
-            Users.Add(user);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
         }
 
-        public AppUser? Get(int id)
+        public async Task<AppUser?> Get(int id)
         {
-            return Users.FirstOrDefault(p => p.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public void Update(AppUser user)
+        public async Task Update(AppUser user)
         {
-            var index = Users.FindIndex(p => p.Id == user.Id);
-            if (index == -1)
-                return;
-
-            Users[index] = user;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var user = Get(id);
+            var user = await Get(id);
             if (user is null) return;
-            Users.Remove(user);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
         }
-
     }
 }

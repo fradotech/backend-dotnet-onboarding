@@ -8,9 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(Config.ConnectionString));
 builder.Services.AddScoped<UserService>();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql("Host=127.0.0.1;Database=dotnet_onboarding;Username=postgres;Password=frado201"));
 
 var app = builder.Build();
 

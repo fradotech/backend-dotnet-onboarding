@@ -32,7 +32,7 @@ namespace backend_dotnet_onboarding.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    role_id = table.Column<int>(type: "integer", nullable: false)
+                    role_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -41,8 +41,7 @@ namespace backend_dotnet_onboarding.Migrations
                         name: "fk_users_roles_role_id",
                         column: x => x.role_id,
                         principalTable: "roles",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(
