@@ -59,8 +59,7 @@ public class UserController(UserService userService) : ControllerBase
     [HttpPatch("{id}/is-active")]
     public async Task<IActionResult> UpdateIsActive(int id, bool isActive)
     {
-       await _userService.UpdateUserIsActive(id, isActive);
-
+        await _userService.UpdateUserIsActive(id, isActive);
         return NoContent();
     }
 }
