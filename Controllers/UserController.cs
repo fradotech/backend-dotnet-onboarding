@@ -36,8 +36,8 @@ public class UserController(UserService userService) : ControllerBase
     {
         if (id != user.Id) return BadRequest();
 
-        var existingPizza = _userService.Get(id);
-        if (existingPizza is null) return NotFound();
+        var existingUser = _userService.Get(id);
+        if (existingUser is null) return NotFound();
 
         await _userService.Update(user);
 
@@ -48,8 +48,8 @@ public class UserController(UserService userService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var pizza = _userService.Get(id);
-        if (pizza is null) return NotFound();
+        var user = _userService.Get(id);
+        if (user is null) return NotFound();
 
         await _userService.Delete(id);
 
