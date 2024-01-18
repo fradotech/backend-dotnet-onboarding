@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Iam.Services;
+using Microsoft.Extensions.Logging;
+
+using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+ILogger logger = factory.CreateLogger("Program");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +34,11 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     if (dbContext.Database.CanConnect())
     {
-        Console.WriteLine("Connected to the database successfully!");
+        logger.LogInformation("Connected to the database successfully!");
     }
     else
     {
-        throw new Exception("Failed to connect to the database.");
+        logger.LogError("Failed to connect to the database!");
     }
 }
 
