@@ -1,47 +1,77 @@
 using Iam.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Iam.Services
+namespace Iam.Services;
+
+public partial class UserService
 {
-    public class UserService
+    private readonly AppDbContext _context;
+
+    public UserService(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public UserService(AppDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<List<AppUser>> GetAll()
+    {
+        return await _context.Users
+            .Include(u => u.Role)
+            .ToListAsync();
+    }
 
-        public async Task<List<AppUser>> GetAll()
-        {
-            return await _context.Users.ToListAsync();
-        }
+    public async Task Create(AppUser user)
+    {
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task Create(AppUser user)
+    public async Task<AppUser?> Get(int id)
+    {
+        return await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task Update(AppUser user)
+    {
+        _context.Entry(user).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Delete(int id)
+    {
+        var user = await Get(id);
+        if (user is null) return;
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    }
+}
+
+public partial class UserService
+{
+    public async Task<bool> UpdateUserIsActive(int userId, bool isActive)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+
+        user.IsActive = isActive;
+        _context.Entry(user).State = EntityState.Modified;
+
+        try
         {
-            _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<AppUser?> Get(int id)
+        catch (DbUpdateConcurrencyException)
         {
-            return await _context.Users.FirstOrDefaultAsync(p => p.Id == id);
+            if (!UserExists(userId)) return false;
+            else throw;
         }
 
-        public async Task Update(AppUser user)
-        {
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+        return true;
+    }
 
-        public async Task Delete(int id)
-        {
-            var user = await Get(id);
-            if (user is null) return;
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-        }
+    private bool UserExists(int id)
+    {
+        return _context.Users.Any(e => e.Id == id);
     }
 }

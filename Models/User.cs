@@ -1,11 +1,13 @@
+using Iam.Interface;
+
 namespace Iam.Models;
 
-public class AppUser
+public class AppUser: IUser
 {
-    public int Id { get; set; }
-    public required string Name { get; set; }
-    public bool IsActive { get; set; }
+    public new int Id { get; set; }
+    public new required string Name { get; set; }
+    public new bool IsActive { get; set; }
 
-    public int? RoleId { get; set; }
-    public Role? Role { get; set; }
+    public new int? RoleId { get; set; }
+    public new Role? Role { get; set; }
 }

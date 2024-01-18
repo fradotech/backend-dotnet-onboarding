@@ -1,7 +1,9 @@
+using Iam.Interface;
+
 namespace Iam.Models;
 
-public class Role
+public class Role: IRole
 {
-    public int Id { get; set; }
-    public required string Name { get; set; }
+    public new int Id { get; set; }
+    public new required string Name { get; set; }
 }
