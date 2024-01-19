@@ -63,7 +63,7 @@ public partial class UserService
 
 public partial class UserService
 {
-    public async Task<bool> UpdateUserIsActive(int userId, bool isActive)
+    public async Task<bool> UpdateIsActive(int userId, bool isActive)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null) return false;
