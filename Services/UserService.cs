@@ -21,6 +21,11 @@ public partial class UserService
 
     public async Task Create(User user)
     {
+        if (user.RoleId != null)
+        {
+            user.Role = await _context.Roles.FindAsync(user.RoleId) ?? throw new Exception("Role not found");
+        }
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
@@ -34,6 +39,11 @@ public partial class UserService
 
     public async Task Update(User user)
     {
+        if (user.RoleId != null)
+        {
+            user.Role = await _context.Roles.FindAsync(user.RoleId) ?? throw new Exception("Role not found");
+        }
+        
         _context.Entry(user).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
