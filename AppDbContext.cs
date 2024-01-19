@@ -3,6 +3,20 @@ using Iam.Models; // Tambahkan ini
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    public static void CreateConnection (WebApplication app, ILogger logger)
+    {
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        if (dbContext.Database.CanConnect())
+        {
+            logger.LogInformation("Connected to the database successfully!");
+        }
+        else
+        {
+            logger.LogError("Failed to connect to the database!");
+        }
+    }
+
     public DbSet<AppUser> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
 

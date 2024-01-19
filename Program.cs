@@ -27,18 +27,6 @@ app.MapControllers();
 app.UseMiddleware<AuthorizationMiddleware>();
 app.UseHttpsRedirection();
 
-// Check database connection
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    if (dbContext.Database.CanConnect())
-    {
-        logger.LogInformation("Connected to the database successfully!");
-    }
-    else
-    {
-        logger.LogError("Failed to connect to the database!");
-    }
-}
+AppDbContext.CreateConnection(app, logger);
 
 app.Run();
