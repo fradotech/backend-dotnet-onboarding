@@ -1,19 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Iam.Services;
-using Microsoft.Extensions.Logging;
+using FluentValidation.AspNetCore;
+using Iam.Validators;
+using FluentValidation;
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
 ILogger logger = factory.CreateLogger("Program");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(Config.ConnectionString));
 builder.Services.AddScoped<UserService>();
-
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<UserDto>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

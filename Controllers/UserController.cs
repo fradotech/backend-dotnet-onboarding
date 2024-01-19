@@ -11,20 +11,20 @@ public class UserController(UserService userService) : ControllerBase
     private readonly UserService _userService = userService;
 
     [HttpGet]
-    public async Task<ActionResult<List<AppUser>>> GetAll()
+    public async Task<ActionResult<List<User>>> GetAll()
     {
         return await _userService.GetAll();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(AppUser user)
+    public async Task<IActionResult> Create([FromBody] User user)
     {
         await _userService.Create(user);
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<AppUser>> Get(int id)
+    public async Task<ActionResult<User>> Get(int id)
     {
         var user = await _userService.Get(id);
         if (user == null) return NotFound();
@@ -32,7 +32,7 @@ public class UserController(UserService userService) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, AppUser user)
+    public async Task<IActionResult> Update(int id, [FromBody] User user)
     {
         if (id != user.Id) return BadRequest();
 

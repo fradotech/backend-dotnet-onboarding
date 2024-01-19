@@ -12,27 +12,27 @@ public partial class UserService
         _context = context;
     }
 
-    public async Task<List<AppUser>> GetAll()
+    public async Task<List<User>> GetAll()
     {
         return await _context.Users
             .Include(u => u.Role)
             .ToListAsync();
     }
 
-    public async Task Create(AppUser user)
+    public async Task Create(User user)
     {
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<AppUser?> Get(int id)
+    public async Task<User?> Get(int id)
     {
         return await _context.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task Update(AppUser user)
+    public async Task Update(User user)
     {
         _context.Entry(user).State = EntityState.Modified;
         await _context.SaveChangesAsync();
