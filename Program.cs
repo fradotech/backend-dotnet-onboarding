@@ -17,6 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(Config.
 builder.Services.AddScoped<UserService>();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<UserDto>();
+builder.Services.AddSingleton<QueueService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

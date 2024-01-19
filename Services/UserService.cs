@@ -6,10 +6,12 @@ namespace Iam.Services;
 public partial class UserService
 {
     private readonly AppDbContext _context;
+    private readonly QueueService _queueService;
 
-    public UserService(AppDbContext context)
+    public UserService(AppDbContext context, QueueService queueService)
     {
         _context = context;
+        _queueService = queueService;
     }
 
     public async Task<List<User>> GetAll()
@@ -28,6 +30,7 @@ public partial class UserService
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
+        await _queueService.SendMessageAsync("User created!", user);
     }
 
     public async Task<User?> Get(int id)
@@ -43,9 +46,10 @@ public partial class UserService
         {
             user.Role = await _context.Roles.FindAsync(user.RoleId) ?? throw new Exception("Role not found");
         }
-        
+
         _context.Entry(user).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+        await _queueService.SendMessageAsync("User updated!", user);
     }
 
     public async Task Delete(int id)

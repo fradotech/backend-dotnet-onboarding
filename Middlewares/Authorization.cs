@@ -4,7 +4,7 @@ public class AuthorizationMiddleware(RequestDelegate next)
 
     public async Task InvokeAsync(HttpContext context)
     {
-        Console.WriteLine("AuthorizationMiddleware: InvokeAsync");
+        Console.WriteLine("AuthorizationMiddleware: Testing middleware");
         await _next(context);
     }
 }
