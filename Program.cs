@@ -20,6 +20,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserDto>();
 builder.Services.AddSingleton<QueueService>();
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();

@@ -26,20 +26,18 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [HttpGet("{id}")]
     public async Task<ActionResult<Category>> Get(int id)
     {
-        var category = await _categoryService.Get(id);
+        Category? category = await _categoryService.Get(id);
         if (category == null) return NotFound();
         return category;
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Category category)
+    public async Task<IActionResult> Update(int id, [FromBody] Category categoryRequest)
     {
-        if (id != category.Id) return BadRequest();
+        Category? category = await _categoryService.Get(id);
+        if (category is null) return NotFound();
 
-        var existingCategory = _categoryService.Get(id);
-        if (existingCategory is null) return NotFound();
-
-        await _categoryService.Update(category);
+        await _categoryService.Update(category, categoryRequest);
 
         return NoContent();
     }
@@ -48,7 +46,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var category = _categoryService.Get(id);
+        Category? category = await _categoryService.Get(id);
         if (category is null) return NotFound();
 
         await _categoryService.Delete(id);

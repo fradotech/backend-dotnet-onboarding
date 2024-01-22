@@ -26,20 +26,18 @@ public class UserController(UserService userService) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> Get(int id)
     {
-        var user = await _userService.Get(id);
+        User? user = await _userService.Get(id);
         if (user == null) return NotFound();
         return user;
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] User user)
+    public async Task<IActionResult> Update(int id, [FromBody] User userRequest)
     {
-        if (id != user.Id) return BadRequest();
+        User? user = await _userService.Get(id);
+        if (user is null) return NotFound();
 
-        var existingUser = _userService.Get(id);
-        if (existingUser is null) return NotFound();
-
-        await _userService.Update(user);
+        await _userService.Update(user, userRequest);
 
         return NoContent();
     }
@@ -48,7 +46,7 @@ public class UserController(UserService userService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var user = _userService.Get(id);
+        User? user = await _userService.Get(id);
         if (user is null) return NotFound();
 
         await _userService.Delete(id);

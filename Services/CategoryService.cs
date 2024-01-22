@@ -23,8 +23,11 @@ public class CategoryService(AppDbContext context)
         return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task Update(Category category)
+    public async Task Update(Category category, Category categoryRequest)
     {
+        category.Name = categoryRequest.Name;
+        category.Description = categoryRequest.Description;
+
         _context.Entry(category).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }

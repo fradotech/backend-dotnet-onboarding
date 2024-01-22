@@ -34,16 +34,19 @@ public partial class UserService(AppDbContext context, QueueService queueService
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task Update(User user)
+    public async Task Update(User user, User userRequest)
     {
-        if (user.RoleId != null)
+        if (userRequest.RoleId != null)
         {
-            user.Role = await _context.Roles.FindAsync(user.RoleId) ?? throw new Exception("Role not found");
+            user.Role = await _context.Roles.FindAsync(userRequest.RoleId) ?? throw new Exception("Role not found");
         }
 
-        _context.Entry(user).State = EntityState.Modified;
+        user.Name = userRequest.Name;
+        user.IsActive = userRequest.IsActive;
+
+        _context.Entry(userRequest).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-        await _queueService.SendMessageAsync("User updated!", user);
+        await _queueService.SendMessageAsync("User updated!", userRequest);
     }
 
     public async Task Delete(int id)
