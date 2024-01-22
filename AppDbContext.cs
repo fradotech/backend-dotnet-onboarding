@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Iam.Models; // Tambahkan ini
+using Iam.Models;
+using Product.Models; // Tambahkan ini
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
@@ -19,11 +20,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<Role>().ToTable("roles");
+        modelBuilder.Entity<Category>().ToTable("categories");
 
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {

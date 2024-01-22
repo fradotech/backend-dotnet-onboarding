@@ -3,16 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Iam.Services;
 
-public partial class UserService
+public partial class UserService(AppDbContext context, QueueService queueService)
 {
-    private readonly AppDbContext _context;
-    private readonly QueueService _queueService;
-
-    public UserService(AppDbContext context, QueueService queueService)
-    {
-        _context = context;
-        _queueService = queueService;
-    }
+    private readonly AppDbContext _context = context;
+    private readonly QueueService _queueService = queueService;
 
     public async Task<List<User>> GetAll()
     {

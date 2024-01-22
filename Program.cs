@@ -3,6 +3,7 @@ using Iam.Services;
 using FluentValidation.AspNetCore;
 using Iam.Validators;
 using FluentValidation;
+using Product.Services;
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
 ILogger logger = factory.CreateLogger("Program");
@@ -14,10 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(Config.ConnectionString));
-builder.Services.AddScoped<UserService>();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<UserDto>();
 builder.Services.AddSingleton<QueueService>();
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();
 
